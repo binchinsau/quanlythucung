@@ -19,7 +19,7 @@ const sterilizedInput = document.getElementById("input-sterilized");
 const tableBodyEl = document.getElementById("tbody");
 const formEl = document.getElementById("container-form");
 renderTableData(petArr);
-
+//
 //Hàm sửa thông tin thú cưng
 const editPet = id => {
   //Hiển thị bảng nhập dữ liệu
