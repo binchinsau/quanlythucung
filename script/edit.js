@@ -24,8 +24,22 @@ renderTableData(petArr);
 const editPet = id => {
   //Hiển thị bảng nhập dữ liệu
   formEl.classList.remove("hide");
-  console.log("ok");
+
   const pet = petArr.find(petItem => petItem.id === id);
+  idInput.value = pet.id;
+  nameInput.value = pet.name;
+  ageInput.value = pet.age;
+  typeInput.value = pet.type;
+  weightInput.value = pet.weight;
+  lengthInput.value = pet.length;
+  colorInput.value = pet.color;
+  breedInput.value = pet.breed;
+  vaccinatedInput.checked = pet.vaccinated;
+  dewormedInput.checked = pet.dewormed;
+  sterilizedInput.checked = pet.sterilized;
+
+  renderBreed();
+  breedInput.value = `${pet.breed}`;
 };
 
 //THÊM SỰ KIỆN VÀO PHẦN TỬ inputType để cập nhật các tùy chọn cho phần tử
@@ -43,7 +57,6 @@ const renderBreed = () => {
       const option = document.createElement("option");
       option.innerHTML = `${breedItem.name}`;
       breedInput.appendChild(option);
-      console.log("ok");
     });
     //KHI NHẤN VÀO Cat
   } else if (typeInput.value === "Cat") {
@@ -55,8 +68,6 @@ const renderBreed = () => {
     });
   }
 };
-// //TẠO SỰ KIỆN CLICK KHI ẤN CHỌN VÀO typeInput để hiển thị loại giống của Dog , Cat
-// typeInput.addEventListener("click", renderBreed);
 
 submitBtn.addEventListener("click", function () {
   //Lấy dữ liệu
@@ -72,7 +83,6 @@ submitBtn.addEventListener("click", function () {
     vaccinated: vaccinatedInput.checked,
     dewormed: dewormedInput.checked,
     sterilized: sterilizedInput.checked,
-    date: new Date(),
   };
   console.log(data);
 
@@ -81,14 +91,14 @@ submitBtn.addEventListener("click", function () {
 
   //Nếu hợp lệ =>
   if (validate) {
-    //Thêm dữ liệu vào mảng của thú cưng
-    petArr.push(data);
-
+    const index = petArr.findIndex(pet => pet.id === data.id);
+    //
+    petArr[index] = data;
+    saveToStorage("petArr", petArr);
+    // Khi nhấn submit sẽ thêm class hide để đóng phần nhập thông tin
+    formEl.classList.add("hide");
     //Hiển thị danh sách thú cưng ra bảng
     renderTableData(petArr);
-    saveToStorage("petArr", petArr);
-    //Xóa dữ liệu nhập vào từ form
-    clearInput();
   }
 });
 
@@ -126,20 +136,6 @@ function renderTableData(petARR) {
     </td>`;
     tableBodyEl.appendChild(row);
   }
-}
-//Hàm xóa dữ liệu của khách nhập vào.
-function clearInput() {
-  idInput.value = "";
-  nameInput.value = "";
-  ageInput.value = "";
-  typeInput.value = "Select Type";
-  weightInput.value = "";
-  lengthInput.value = "";
-  colorInput.value = "#000000";
-  breedInput.value = "Select Breed";
-  vaccinatedInput.checked = false;
-  dewormedInput.checked = false;
-  sterilizedInput.checked = false;
 }
 
 //Tạo lệnh if else để không có trường nào bị nhập thiếu dữ liệu.
@@ -183,13 +179,6 @@ function validateData(data) {
   if (data.breed === "Select Breed") {
     alert("Please select Breed!");
     isValidate = false;
-  }
-  for (let i = 0; i < petArr.length; i++) {
-    if (data.id === petArr[i].id) {
-      alert("ID must be unique!");
-      isValidate = false;
-      break;
-    }
   }
   return isValidate;
 }
