@@ -74,7 +74,7 @@ submitBtn.addEventListener("click", function () {
     vaccinated: vaccinatedInput.checked,
     dewormed: dewormedInput.checked,
     sterilized: sterilizedInput.checked,
-    // date: new Date(),
+    date: new Date(),
   };
   console.log(data);
 
