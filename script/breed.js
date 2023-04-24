@@ -10,7 +10,7 @@ renderBreedTable(breedArr);
 
 submitBtn.addEventListener("click", function () {
   const data = {
-    name: breedInput.value,
+    breed: breedInput.value,
     type: typeInput.value,
   };
   console.log(data);
@@ -33,7 +33,7 @@ submitBtn.addEventListener("click", function () {
 //HÀM KIỂM TRA TÍNH HỢP LỆ CỦA DỮ LIỆU
 const validateData = data => {
   let isValidate = true;
-  if (data.name.trim() === "") {
+  if (data.breed.trim() === "") {
     alert("Nhập Breed");
     isValidate = false;
   }
@@ -56,10 +56,10 @@ function renderBreedTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
     <td scope="col">${index + 1}</td>
-    <td scope="col">${breedItem.name}</td>
+    <td scope="col">${breedItem.breed}</td>
     <td scope="col">${breedItem.type}</td>
     <td><button class="btn btn-danger" onclick="deleteBreed('${
-      breedItem.name
+      breedItem.breed
     }')">Delete</button></td>
     `;
     tableBodyEl.appendChild(tr);
@@ -71,7 +71,7 @@ const deleteBreed = breedID => {
   const commandDel = confirm("Bạn choắc chưa?");
   if (commandDel) {
     for (let i = 0; i < breedArr.length; i++) {
-      if (breedID === breedArr[i].name) {
+      if (breedID === breedArr[i].breed) {
         breedArr.splice(i, 1);
         saveToStorage("breedArr", breedArr);
         break; // thoát khỏi vòng lặp khi tìm thấy phần tử cần xóa

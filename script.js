@@ -18,6 +18,15 @@ const sterilizedInput = document.getElementById("input-sterilized");
 
 const tableBodyEl = document.getElementById("tbody");
 
+// Hàm hiển thị thời gian
+const displayTime = date => {
+  if (typeof date === "string") {
+    return date;
+  } else if (typeof date === "object") {
+    return JSON.parse(JSON.stringify(date));
+  }
+};
+
 renderTableData(petArr);
 
 //THÊM SỰ KIỆN VÀO PHẦN TỬ inputType để cập nhật các tùy chọn cho phần tử
@@ -33,7 +42,7 @@ const renderBreed = () => {
     const breedDogs = breedArr.filter(breedItem => breedItem.type === "Dog");
     breedDogs.forEach(breedItem => {
       const option = document.createElement("option");
-      option.innerHTML = `${breedItem.name}`;
+      option.innerHTML = `${breedItem.breed}`;
       breedInput.appendChild(option);
       console.log("ok");
     });
@@ -42,11 +51,12 @@ const renderBreed = () => {
     const breedCats = breedArr.filter(breedItem => breedItem.type === "Cat");
     breedCats.forEach(breedItem => {
       const option = document.createElement("option");
-      option.innerHTML = `${breedItem.name}`;
+      option.innerHTML = `${breedItem.breed}`;
       breedInput.appendChild(option);
     });
   }
 };
+
 // //TẠO SỰ KIỆN CLICK KHI ẤN CHỌN VÀO typeInput để hiển thị loại giống của Dog , Cat
 // typeInput.addEventListener("click", renderBreed);
 
@@ -64,7 +74,7 @@ submitBtn.addEventListener("click", function () {
     vaccinated: vaccinatedInput.checked,
     dewormed: dewormedInput.checked,
     sterilized: sterilizedInput.checked,
-    date: new Date(),
+    // date: new Date(),
   };
   console.log(data);
 
@@ -109,8 +119,9 @@ function renderTableData(petARR) {
     <td><i class="bi ${
       petArr[i].sterilized ? "bi-check-circle-fill" : "bi-x-circle-fill"
     }"></i></td>
-    
-    <td>...</td>
+    <td>${displayTime(petArr[i].date).slice(8, 10)} /
+    ${displayTime(petArr[i].date).slice(5, 7)} /
+    ${displayTime(petArr[i].date).slice(0, 4)}</td>
     <td>
     <button class="btn btn-danger" onclick="deletePet('${
       petArr[i].id

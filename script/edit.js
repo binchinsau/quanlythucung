@@ -18,30 +18,55 @@ const sterilizedInput = document.getElementById("input-sterilized");
 
 const tableBodyEl = document.getElementById("tbody");
 const formEl = document.getElementById("container-form");
-renderTableData(petArr);
-//
-//Hàm sửa thông tin thú cưng
-const editPet = id => {
-  //Hiển thị bảng nhập dữ liệu
-  formEl.classList.remove("hide");
 
-  const pet = petArr.find(petItem => petItem.id === id);
-  idInput.value = pet.id;
-  nameInput.value = pet.name;
-  ageInput.value = pet.age;
-  typeInput.value = pet.type;
-  weightInput.value = pet.weight;
-  lengthInput.value = pet.length;
-  colorInput.value = pet.color;
-  breedInput.value = pet.breed;
-  vaccinatedInput.checked = pet.vaccinated;
-  dewormedInput.checked = pet.dewormed;
-  sterilizedInput.checked = pet.sterilized;
-
-  renderBreed();
-  breedInput.value = `${pet.breed}`;
+// Hàm hiển thị thời gian
+const displayTime = date => {
+  if (typeof date === "string") {
+    return date;
+  } else if (typeof date === "object") {
+    return JSON.parse(JSON.stringify(date));
+  }
 };
 
+renderTableData(petArr);
+
+//Hàm hiển thị thú cưng
+function renderTableData(petArr) {
+  tableBodyEl.innerHTML = "";
+  petArr.forEach(pet => {
+    let row = document.createElement("tr");
+    row.innerHTML = `
+    <th scope="row">${pet.id}</th>
+    <td>${pet.name}</td>
+    <td>${pet.age}</td>
+    <td>${pet.type}</td>
+    <td>${pet.weight} kg</td>
+    <td>${pet.length} cm</td>
+    <td>${pet.breed}</td>
+    <td>
+      <i class="bi bi-square-fill" style="color: ${pet.color}"></i>
+    </td>
+    <td><i class="bi ${
+      pet.vaccinated ? "bi-check-circle-fill" : "bi-x-circle-fill"
+    }"></i></td>
+    <td><i class="bi ${
+      pet.dewormed ? "bi-check-circle-fill" : "bi-x-circle-fill"
+    }"></i></td>
+    <td><i class="bi ${
+      pet.sterilized ? "bi-check-circle-fill" : "bi-x-circle-fill"
+    }"></i></td>
+    <td>${displayTime(pet.date).slice(8, 10)} /
+    ${displayTime(pet.date).slice(5, 7)} /
+    ${displayTime(pet.date).slice(0, 4)}</td>
+    <td>
+    <button class="btn btn-info" onclick="startEditPet('${
+      pet.id
+    }')">Edit</button>
+    </td>`;
+
+    tableBodyEl.appendChild(row);
+  });
+}
 //THÊM SỰ KIỆN VÀO PHẦN TỬ inputType để cập nhật các tùy chọn cho phần tử
 typeInput.addEventListener("change", () => {
   renderBreed();
@@ -55,7 +80,7 @@ const renderBreed = () => {
     const breedDogs = breedArr.filter(breedItem => breedItem.type === "Dog");
     breedDogs.forEach(breedItem => {
       const option = document.createElement("option");
-      option.innerHTML = `${breedItem.name}`;
+      option.innerHTML = `${breedItem.breed}`;
       breedInput.appendChild(option);
     });
     //KHI NHẤN VÀO Cat
@@ -63,13 +88,13 @@ const renderBreed = () => {
     const breedCats = breedArr.filter(breedItem => breedItem.type === "Cat");
     breedCats.forEach(breedItem => {
       const option = document.createElement("option");
-      option.innerHTML = `${breedItem.name}`;
+      option.innerHTML = `${breedItem.breed}`;
       breedInput.appendChild(option);
     });
   }
 };
 
-submitBtn.addEventListener("click", function () {
+submitBtn.addEventListener("click", () => {
   //Lấy dữ liệu
   const data = {
     id: idInput.value,
@@ -93,7 +118,10 @@ submitBtn.addEventListener("click", function () {
   if (validate) {
     const index = petArr.findIndex(pet => pet.id === data.id);
     //
+    data.date = petArr[index].date;
+
     petArr[index] = data;
+
     saveToStorage("petArr", petArr);
     // Khi nhấn submit sẽ thêm class hide để đóng phần nhập thông tin
     formEl.classList.add("hide");
@@ -102,41 +130,27 @@ submitBtn.addEventListener("click", function () {
   }
 });
 
-//Hàm hiển thị thú cưng
-function renderTableData(petARR) {
-  tableBodyEl.innerHTML = "";
-  for (let i = 0; i < petARR.length; i++) {
-    let row = document.createElement("tr");
-    row.innerHTML = `
-    <th scope="row">${petArr[i].id}</th>
-    <td>${petArr[i].name}</td>
-    <td>${petArr[i].age}</td>
-    <td>${petArr[i].type}</td>
-    <td>${petArr[i].weight} kg</td>
-    <td>${petArr[i].length} cm</td>
-    <td>${petArr[i].breed}</td>
-    <td>
-      <i class="bi bi-square-fill" style="color: ${petArr[i].color}"></i>
-    </td>
-    <td><i class="bi ${
-      petArr[i].vaccinated ? "bi-check-circle-fill" : "bi-x-circle-fill"
-    }"></i></td>
-    <td><i class="bi ${
-      petArr[i].dewormed ? "bi-check-circle-fill" : "bi-x-circle-fill"
-    }"></i></td>
-    <td><i class="bi ${
-      petArr[i].sterilized ? "bi-check-circle-fill" : "bi-x-circle-fill"
-    }"></i></td>
-    
-    <td>...</td>
-    <td>
-    <button class="btn btn-info" onclick="editPet('${
-      petArr[i].id
-    }')">Edit</button>
-    </td>`;
-    tableBodyEl.appendChild(row);
-  }
-}
+//Hàm sửa thông tin thú cưng
+const startEditPet = petId => {
+  //Hiển thị bảng nhập dữ liệu
+  formEl.classList.remove("hide");
+
+  const pet = petArr.find(petItem => petItem.id === petId);
+  idInput.value = pet.id;
+  nameInput.value = pet.name;
+  ageInput.value = pet.age;
+  typeInput.value = pet.type;
+  weightInput.value = pet.weight;
+  lengthInput.value = pet.length;
+  colorInput.value = pet.color;
+  breedInput.value = pet.breed;
+  vaccinatedInput.checked = pet.vaccinated;
+  dewormedInput.checked = pet.dewormed;
+  sterilizedInput.checked = pet.sterilized;
+
+  renderBreed();
+  breedInput.value = `${pet.breed}`;
+};
 
 //Tạo lệnh if else để không có trường nào bị nhập thiếu dữ liệu.
 function validateData(data) {
@@ -145,7 +159,6 @@ function validateData(data) {
     alert("Không để trống ID");
     isValidate = false;
   }
-
   if (data.name.trim() === "") {
     alert("Không để trống Tên");
     isValidate = false;

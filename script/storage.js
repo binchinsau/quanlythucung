@@ -32,19 +32,19 @@ const data2 = {
 };
 
 const breed1 = {
-  name: "Oggy",
+  breed: "Oggy",
   type: "Dog",
 };
 const breed2 = {
-  name: "Ba Lan",
+  breed: "Ba Lan",
   type: "Cat",
 };
 const breed3 = {
-  name: "Gold",
+  breed: "Gold",
   type: "Dog",
 };
 const breed4 = {
-  name: "Black",
+  breed: "Black",
   type: "Cat",
 };
 
