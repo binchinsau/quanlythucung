@@ -59,6 +59,7 @@ sideBar.addEventListener("click", function () {
 const getFromStorage = key => {
   return JSON.parse(localStorage.getItem(key));
 };
+
 //TẠO BIẾN CHỨA LẤY DỮ LIỆU LƯU TRỮ
 const petArr = getFromStorage("petArr");
 
